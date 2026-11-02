@@ -32,7 +32,9 @@ Left to right, top to bottom:
   - Each pane is a Base card with 10 px corners, a 1 px Surface 0 border and a
     30 px header (Herdr's `pane` mod).
   - The focused pane's border is Text.
-  - Files and Changes open as a 368 px panel on the right.
+  - Files and Changes open as a 368 px panel on the right. Their rows show
+    16 px [Catppuccin VS Code icons](https://github.com/catppuccin/vscode-icons)
+    in the current flavor.
 - **Status bar** (28 px, Crust, Surface 0 line above): the machine, branch, agent
   count and the command palette hint, in Subtext 1 at 11.8 px.
 - **Terminals**: Base background, Text foreground, Rosewater cursor, and the
@@ -111,6 +113,7 @@ tab bar's height differ.
     - `brand` and `sidebar-footer` use `catppuccin-chrome`.
     - `tabs` uses `catppuccin-tabs` and is 46 px tall (was 42).
     - `status` uses `catppuccin-status`.
+    - `files` and `changes` use `catppuccin-files` and `catppuccin-changes`.
     - The pane `focus` color is `foreground` (was `accent`).
 - **`layouts/catppuccin.svg`**: the picture Settings shows for the layout, drawn
   in Macchiato.
@@ -145,24 +148,49 @@ tab bar's height differ.
   The title row uses `t.canvas` and gets a bottom border. The footer is
   unchanged.
 - **`mods/catppuccin-status`**: Herdr's `workspace-status` mod with `t.canvas`.
-- **Shipped mods used as they are:** `spaces`, `agents`, `pane`, `files`,
-  `changes`, `menu`, `new-menu`, `picker`, `machine-add`. The tab bar uses icons
-  from `mods/pane`, `mods/files` and `mods/changes`.
+- **`mods/catppuccin-files`**: Herdr's `files` mod. The row's `svg` file or folder
+  glyph becomes a 16 px `image` from `icons.js`. Its chevrons still come from
+  `mods/files`.
+  - `icons/<flavor>/` holds catppuccin/vscode-icons' SVGs, unchanged. Their colors
+    are built in, so there is one set per flavor.
+  - `icon-map.js` is the generated table of file names, extensions and folder
+    names.
+  - `icons.js` matches like a VS Code icon theme: `parent/name`, then the file
+    name, then the longest extension (`a.test.ts` tries `test.ts`, then `ts`),
+    then the default icon. Open folders use the `_open` icon.
+- **`mods/catppuccin-changes`**: Herdr's `changes` mod, with the same icon before
+  each path. Herdr doesn't let a mod import from another mod's folder, so it has
+  its own copies of `icons.js` and `icon-map.js`, and draws the SVGs in
+  `mods/catppuccin-files/icons`.
+- **`scripts/update-icons.mjs`**: rebuilds the SVGs and both `icon-map.js` files,
+  and copies `icons.js` to `catppuccin-changes`:
+  `node scripts/update-icons.mjs path/to/vscode-icons`. VS Code finds some icons
+  through its language ids. The ones whose extensions upstream doesn't list are
+  in the script's `LANGUAGE_EXTENSIONS`.
+- **Shipped mods used as they are:** `spaces`, `agents`, `pane`, `menu`,
+  `new-menu`, `picker`, `machine-add`. The tab bar uses icons from `mods/pane`,
+  `mods/files` and `mods/changes`.
 - **Commands the mods run:** `tab.select`, `tab.rename`, `tab.move`,
   `tab.close`, `tab.prev`, `tab.next`, `layout.show`, `layout.hide`,
   `layout.select`, `mod.open`, `app.settings`, `app.palette`, and the
   `window.*` commands.
-- **Theme names only:** the three mods use only theme color names, never hex,
-  so every flavor (and any other theme) works without changing them.
+- **Theme names only:** the mods use only theme color names, never hex, so every
+  flavor (and any other theme) works without changing them. The one exception
+  is `icons.js`, which recognizes a flavor by its Base color to pick an icon set.
 
 ## Watch out
 
 - **Copy the theme files too:** put all four `themes/catppuccin-*.json` in the
   home's `themes/` folder, not just the layout and mods. Without them the layout
   falls back to another theme.
-- **The mods are clones:** they copy Herdr 0.1.12's `tabs`, `workspace-chrome`
-  and `workspace-status`, so they won't get Herdr's later fixes. If they drift,
-  clone the current mods again and repeat the few color swaps.
+- **The mods are clones:** they copy Herdr 0.1.12's `tabs`, `workspace-chrome`,
+  `workspace-status`, `files` and `changes`, so they won't get Herdr's later
+  fixes. If they drift, clone the current mods again and repeat the few changes.
+- **Other themes get a Catppuccin icon set:** the icons can't follow a theme's
+  colors. Outside the four flavors, the panels show Macchiato's icons in dark
+  mode and Latte's in light mode.
+- **Edit `icons.js` in `catppuccin-files`:** then run `update-icons.mjs` to copy
+  it to `catppuccin-changes`.
 - **Translucent colors are pre-blended:** Herdr theme files take `#rrggbb` only,
   so Zed's translucent colors are worked out in advance. Selection is blended
   over Base, selected rows over Mantle. Latte's selection is 30% where the dark
@@ -184,7 +212,10 @@ tab bar's height differ.
 
 ## Done when
 
-- `herdr-app check` passes for each of the three mods.
+- `herdr-app check` passes for each of the five mods.
+- In each flavor, Files and Changes show colored icons from that flavor's set
+  (`README.md` gets the readme icon, `src/` the source folder icon), and an
+  expanded folder shows its open icon.
 - After `herdr-app do layout.switch --name catppuccin`, sampling a
   `herdr-app shot` gives these colors, for each flavor:
 
