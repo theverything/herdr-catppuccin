@@ -4,7 +4,8 @@
 all four flavors: Latte, Frappé, Macchiato and Mocha. The colors are placed the
 way the official [Catppuccin Zed port](https://github.com/catppuccin/zed) places
 them: a Crust title bar and status bar, a Mantle sidebar, Base terminals, Mauve
-accents and the official terminal palette of each flavor.
+accents and the official terminal palette of each flavor. The Files and Changes
+panels use the official [Catppuccin VS Code icons](https://github.com/catppuccin/vscode-icons).
 
 ![Catppuccin for Herdr](preview.png)
 
@@ -34,7 +35,8 @@ herdr-app do layout.switch --name catppuccin
 
 `ctrl-shift-l` switches back to your other layouts. To remove it, delete
 `layouts/catppuccin.*`, `themes/catppuccin-*.json` and `mods/catppuccin-*` from
-`~/.config/herdr-app`.
+`~/.config/herdr-app`. To update, delete them the same way and install again:
+`cp -n` doesn't replace files that are already there.
 
 ### Just the colors
 
@@ -58,6 +60,9 @@ are listed at [catppuccin.com/ports](https://catppuccin.com/ports).
 | `mods/catppuccin-tabs` | Herdr's tab bar, drawn in Crust, with the active tab in Base |
 | `mods/catppuccin-chrome` | the sidebar's title row (Crust) and footer |
 | `mods/catppuccin-status` | the status bar, drawn in Crust |
+| `mods/catppuccin-files` | Herdr's Files panel with Catppuccin file and folder icons, which matches the current flavor |
+| `mods/catppuccin-changes` | Herdr's Changes panel with the same file icons |
+| `scripts/update-icons.mjs` | rebuilds the icons and their file name table from a vscode-icons checkout |
 | `RECIPE.md` | how to rebuild it from scratch, with the full color mapping |
 
 ## Credits
@@ -65,9 +70,11 @@ are listed at [catppuccin.com/ports](https://catppuccin.com/ports).
 - The palette is [Catppuccin](https://github.com/catppuccin/catppuccin) (MIT).
 - Where each color goes comes from
   [catppuccin/zed](https://github.com/catppuccin/zed).
-- The three mods are lightly modified copies of Herdr's own `tabs`,
-  `workspace-chrome` and `workspace-status` mods
+- The five mods are lightly modified copies of Herdr's own `tabs`,
+  `workspace-chrome`, `workspace-status`, `files` and `changes` mods
   ([herdrdev/herdr-app](https://github.com/herdrdev/herdr-app), Apache-2.0).
+- The file and folder icons are
+  [catppuccin/vscode-icons](https://github.com/catppuccin/vscode-icons) (MIT).
 - Many of the sidebar icons are [Lucide](https://lucide.dev) icons (ISC), which
   came with Herdr's mods.
 
